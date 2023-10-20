@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My test page</title>
+    </head>
+    <body>
+        {% if article %}
+            <ul>
+                {% for my_article in article %}
+                    <li>{{ my_article.title }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Brak artykułów</p>
+        {% endif %}
+    </body>
+</html>
