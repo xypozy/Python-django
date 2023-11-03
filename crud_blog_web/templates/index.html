@@ -1,18 +1,68 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>My test page</title>
-    </head>
-    <body>
-        {% if article %}
-            <ul>
-                {% for my_article in article %}
-                    <li>{{ my_article.title }}</li>
+<head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+</head>
+<body>
+    {% if article %}
+        <ul>
+            {% for my_article in article %}
+                <li>{{ my_article.title }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Brak artykułów</p>
+    {% endif %}
+
+    <!-- Formularz filtrowania produktów -->
+    <div class="container">
+        <h2>Lista Produktów</h2>
+
+        <form action="{% url 'product_list' %}" method="get">
+            <div>
+                <label for="category">Kategoria:</label>
+                <select name="category" id="category">
+                    <option value="">Wszystkie</option>
+                    {% for cat in category %}
+                    <option value="{{ cat.name }}" {% if request.GET.category == cat.name %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="max_price">Maksymalna cena:</label>
+                <input type="number" name="max_price" id="max_price" value="{{ request.GET.max_price }}" placeholder="Maksymalna cena">
+            </div>
+
+            <div>
+                <input type="checkbox" name="in_stock" id="in_stock" value="1" {% if request.GET.in_stock == '1' %}checked{% endif %}>
+                <label for="in_stock">Tylko dostępne</label>
+            </div>
+
+            <button type="submit">Filtruj</button>
+        </form>
+
+        <!-- Lista produktów -->
+        {% if products %}
+            <div class="products-list">
+                {% for product in products %}
+                    <div class="product">
+                        <h3>{{ product.name }}</h3>
+                        <p>Cena: {{ product.price }} zł</p>
+                        {% if product.in_stock %}
+                            <p>Dostępny</p>
+                        {% else %}
+                            <p>Niedostępny</p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         {% else %}
-            <p>Brak artykułów</p>
+            <p>Brak produktów spełniających kryteria.</p>
         {% endif %}
-    </body>
+    </div>
+</body>
 </html>
